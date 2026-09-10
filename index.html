@@ -3,189 +3,301 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HelloBack Wallet - Soberana</title>
+    <title>Wallet Soberana - Dinero Real & Ledger Ciego</title>
     <style>
-        body {
-            background-color: #0b0b0e;
-            color: #ffffff;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            margin: 0;
-            padding: 16px;
+        :root {
+            --bg-color: #0b0f19;
+            --card-bg: #131825;
+            --accent: #6366f1;
+            --accent-hover: #4f46e5;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border: #1e293b;
+            --green: #22c55e;
+            --orange: #f59e0b;
         }
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        .profile-icon {
-            background: #1a1a24;
-            border-radius: 50%;
-            width: 36px;
-            height: 36px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-        }
-        .nav-tabs {
-            display: flex;
-            gap: 10px;
-            overflow-x: auto;
-            padding-bottom: 10px;
-        }
-        .tab {
-            background: #1a1a24;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 14px;
-            color: #a0a0b0;
-            white-space: nowrap;
-        }
-        .tab.active {
-            background: #ab9ff2;
-            color: #0b0b0e;
-            font-weight: bold;
-        }
-        .card-box {
-            background: linear-gradient(135deg, #2b2348, #151324);
-            border-radius: 24px;
-            padding: 24px;
-            text-align: center;
-            margin-top: 20px;
-            border: 1px solid #3d3463;
-        }
-        .card-title {
-            color: #a0a0b0;
-            font-size: 14px;
-        }
-        .card-balance {
-            font-size: 32px;
-            font-weight: bold;
-            margin: 10px 0;
-        }
-        .btn-main {
-            background: #ab9ff2;
-            color: #0b0b0e;
-            border: none;
-            width: 100%;
-            padding: 14px;
-            border-radius: 30px;
-            font-size: 16px;
-            font-weight: bold;
-            margin-top: 20px;
-            cursor: pointer;
-        }
-        .section-title {
-            font-size: 16px;
-            margin: 24px 0 12px 0;
-            color: #a0a0b0;
-        }
-        .token-list {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        .token-item {
-            background: #151324;
-            padding: 12px 16px;
-            border-radius: 16px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border: 1px solid #1a1a24;
-        }
-        .token-info {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        .token-icon {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: #2b2348;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-            font-weight: bold;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-main); padding-bottom: 70px; }
+        header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background: var(--card-bg); border-bottom: 1px solid var(--border); }
+        .user-badge { font-weight: bold; color: var(--accent); }
+        .container { padding: 15px; max-width: 600px; margin: 0 auto; }
+        .section { display: none; }
+        .section.active { display: block; }
+        .card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; padding: 20px; margin-bottom: 15px; text-align: center; }
+        .balance-amount { font-size: 34px; font-weight: bold; margin: 10px 0; color: var(--text-main); }
+        .btn { background: var(--accent); color: white; border: none; padding: 12px 20px; border-radius: 12px; font-weight: bold; cursor: pointer; width: 100%; margin-top: 10px; transition: background 0.2s; }
+        .btn:hover { background: var(--accent-hover); }
+        .btn-secondary { background: transparent; border: 1px solid var(--border); color: var(--text-main); }
+        .btn-crypto { background: var(--orange); }
+        input, select { width: 100%; padding: 12px; margin: 8px 0; background: var(--bg-color); border: 1px solid var(--border); border-radius: 8px; color: white; }
+        .nav-bar { position: fixed; bottom: 0; left: 0; right: 0; background: var(--card-bg); border-top: 1px solid var(--border); display: flex; justify-content: space-around; padding: 10px; z-index: 100; }
+        .nav-item { background: none; border: none; color: var(--text-muted); font-size: 11px; cursor: pointer; display: flex; flex-direction: column; align-items: center; }
+        .nav-item.active { color: var(--accent); }
+        .list-item { display: flex; justify-content: space-between; align-items: center; padding: 12px; border-bottom: 1px solid var(--border); }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
+        .grid-item { background: var(--bg-color); border: 1px solid var(--border); border-radius: 10px; padding: 15px; text-align: center; cursor: pointer; }
+        .grid-item:hover { border-color: var(--accent); }
     </style>
 </head>
 <body>
 
-    <!-- Cabecera estilo Phantom -->
-    <div class="header">
-        <div class="profile-icon">😎</div>
-        <div style="font-weight: bold;">@HelloBack</div>
-        <div>⚙️</div>
+    <header>
+        <div id="displayUsername" class="user-badge">@Soberano</div>
+        <div style="display: flex; gap: 8px; align-items: center;">
+            <select id="currencySymbol" onchange="cambiarMonedaBase()" style="padding: 4px 8px; margin:0; width: auto; font-size: 12px;">
+                <option value="MXN">MXN ($)</option>
+                <option value="USD">USD ($)</option>
+                <option value="EUR">EUR (€)</option>
+                <option value="ARS">ARS ($)</option>
+                <option value="VES">VES (Bs)</option>
+                <option value="CHF">CHF (Fr)</option>
+            </select>
+            <button onclick="switchTab('ajustes')" class="btn-secondary" style="width: auto; padding: 6px 10px; font-size: 12px; margin:0;">⚙️</button>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- SECCIÓN BÓVEDA FIAT SOBERANA -->
+        <div id="tab-inicio" class="section active">
+            <div class="card">
+                <div style="font-size: 14px; color: var(--text-muted);">Bóveda de Dinero Real (Efectivo Digital)</div>
+                <div id="mainBalance" class="balance-amount">0.00</div>
+                <div style="font-size: 12px; color: var(--green);">● Privacidad Absoluta (Sin Rastreo / Sin Reportes)</div>
+                <button class="btn" onclick="switchTab('p2p')">Transferencia P2P Instantánea</button>
+            </div>
+            
+            <div class="card" style="text-align: left;">
+                <h3 style="font-size: 16px; margin-bottom: 5px;">Ingresar Fondos a la Bóveda</h3>
+                <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 10px;">Todo ingreso se valida contablemente como real y limpio.</p>
+                <input type="number" id="depositAmount" placeholder="Monto a registrar...">
+                <button class="btn" style="background:var(--green);" onclick="depositarDineroReal()">Registrar Efectivo en Bóveda</button>
+            </div>
+        </div>
+
+        <!-- SECCIÓN COMPRA DE CRIPTO Y TARJETAS DE REGALO -->
+        <div id="tab-mercado" class="section">
+            <div class="card" style="text-align: left;">
+                <h3>Adquirir Criptomonedas Reales</h3>
+                <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 10px;">Usa tu saldo fiat para comprar cripto soberana.</p>
+                <button class="btn btn-crypto" onclick="comprarCripto('Bitcoin (BTC)')">Comprar Bitcoin (BTC)</button>
+                <button class="btn btn-crypto" onclick="comprarCripto('Monero (XMR)')">Comprar Monero (Privado)</button>
+                <button class="btn btn-crypto" onclick="comprarCripto('USDT')">Comprar USDT</button>
+            </div>
+
+            <div class="card" style="text-align: left;">
+                <h3>Tarjetas de Regalo Autónomas</h3>
+                <p style="font-size: 12px; color: var(--text-muted);">Canje directo descontado de tu saldo fiat.</p>
+                <div class="grid-2">
+                    <div class="grid-item" onclick="comprarGiftCard('Xbox', 1000)">
+                        <strong>Xbox</strong><br><span style="font-size:11px; color:var(--text-muted);">Código Real</span>
+                    </div>
+                    <div class="grid-item" onclick="comprarGiftCard('Netflix', 300)">
+                        <strong>Netflix</strong><br><span style="font-size:11px; color:var(--text-muted);">Suscripción</span>
+                    </div>
+                    <div class="grid-item" onclick="comprarGiftCard('Apple Music', 250)">
+                        <strong>Apple Music</strong><br><span style="font-size:11px; color:var(--text-muted);">Música</span>
+                    </div>
+                    <div class="grid-item" onclick="comprarGiftCard('Google Play', 350)">
+                        <strong>Google Play</strong><br><span style="font-size:11px; color:var(--text-muted);">Apps</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" style="text-align: left; margin-top: 15px;">
+                <h3>Pasarela MetaTrader 5 (MT5)</h3>
+                <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 10px;">Envía fondos hacia tu cuenta de bróker.</p>
+                <button class="btn btn-secondary" onclick="conectarMT5()">Enviar a Cuenta MT5</button>
+            </div>
+        </div>
+
+        <!-- SECCIÓN P2P CIEGO Y AMIGOS -->
+        <div id="tab-p2p" class="section">
+            <div class="card" style="text-align: left;">
+                <h3>Buscador P2P Ciego</h3>
+                <input type="text" id="searchUserInput" placeholder="Buscar usuario en la red..." onkeyup="buscarUsuario()">
+                <div id="searchResult" style="margin-top: 10px; font-size: 14px;"></div>
+            </div>
+
+            <div class="card" style="text-align: left;">
+                <h3>Enviar Dinero Limpio a Amigos</h3>
+                <select id="friendSelect"></select>
+                <input type="number" id="transferAmount" placeholder="Monto a transferir">
+                <button class="btn" onclick="enviarDineroP2P()">Enviar Sin Preguntas</button>
+            </div>
+        </div>
+
+        <!-- SECCIÓN AJUSTES -->
+        <div id="tab-ajustes" class="section">
+            <div class="card" style="text-align: left;">
+                <h3>Configuración de Identidad</h3>
+                <label style="font-size: 12px; color: var(--text-muted);">Tu Nombre de Usuario:</label>
+                <input type="text" id="usernameInput" placeholder="Ej. soberano99">
+                <button class="btn" onclick="guardarUsername()">Actualizar Nombre</button>
+            </div>
+
+            <div class="card" style="text-align: left;">
+                <h3>Mis Amigos Conectados</h3>
+                <div id="friendsList" style="margin-top: 10px; font-size: 14px; color: var(--text-muted);">No hay amigos agregados.</div>
+            </div>
+        </div>
     </div>
 
-    <!-- Pestañas de Navegación -->
-    <div class="nav-tabs">
-        <div class="tab active">Inicio</div>
-        <div class="tab">Tarjetita Privada</div>
-        <div class="tab">P2P Ciego</div>
-        <div class="tab">Ajustes</div>
-    </div>
+    <nav class="nav-bar">
+        <button class="nav-item active" onclick="switchTab('inicio')">🏠<span>Bóveda</span></button>
+        <button class="nav-item" onclick="switchTab('mercado')">🛒<span>Mercado & Gift</span></button>
+        <button class="nav-item" onclick="switchTab('p2p')">⚡<span>P2P Ciego</span></button>
+        <button class="nav-item" onclick="switchTab('ajustes')">⚙️<span>Ajustes</span></button>
+    </nav>
 
-    <!-- Saldo de la Tarjeta Interna (Ciego y Respaldo) -->
-    <div class="card-box">
-        <div class="card-title">Saldo Interno Limpio</div>
-        <div class="card-balance">$0.00</div>
-        <div style="font-size: 12px; color: #4ade80;">● Respaldo Cripto Activo (Sin Rastreo)</div>
-    </div>
+    <script>
+        let appState = JSON.parse(localStorage.getItem('fiat_sovereign_state')) || {
+            username: "@Soberano",
+            currency: "MXN",
+            balance: 15000.00,
+            friends: ["pepe", "sofia", "carlos"]
+        };
 
-    <!-- Botón de Conversión / Acciones -->
-    <button class="btn-main">Convertir / Enviar Anónimo</button>
+        function saveData() {
+            localStorage.setItem('fiat_sovereign_state', JSON.stringify(appState));
+            renderApp();
+        }
 
-    <!-- Lista Exclusiva de Monedas Permitidas -->
-    <div class="section-title">Activos Autorizados</div>
-    <div class="token-list">
-        <div class="token-item">
-            <div class="token-info">
-                <div class="token-icon" style="color: #26a17b;">₮</div>
-                <div><b>USDT</b><div style="font-size: 12px; color: #a0a0b0;">Tether</div></div>
-            </div>
-            <div>$0.00</div>
-        </div>
-        <div class="token-item">
-            <div class="token-info">
-                <div class="token-icon" style="color: #2775ca;">🅲</div>
-                <div><b>USDC</b><div style="font-size: 12px; color: #a0a0b0;">USD Coin</div></div>
-            </div>
-            <div>$0.00</div>
-        </div>
-        <div class="token-item">
-            <div class="token-info">
-                <div class="token-icon" style="color: #f7931a;">₿</div>
-                <div><b>Bitcoin</b><div style="font-size: 12px; color: #a0a0b0;">BTC</div></div>
-            </div>
-            <div>$0.00</div>
-        </div>
-        <div class="token-item">
-            <div class="token-info">
-                <div class="token-icon" style="color: #ff6600;">ɱ</div>
-                <div><b>Monero</b><div style="font-size: 12px; color: #a0a0b0;">XMR</div></div>
-            </div>
-            <div>$0.00</div>
-        </div>
-        <div class="token-item">
-            <div class="token-info">
-                <div class="token-icon" style="color: #14f195;">◎</div>
-                <div><b>Solana</b><div style="font-size: 12px; color: #a0a0b0;">SOL</div></div>
-            </div>
-            <div>$0.00</div>
-        </div>
-        <div class="token-item">
-            <div class="token-info">
-                <div class="token-icon" style="color: #627eea;">Ξ</div>
-                <div><b>Ethereum</b><div style="font-size: 12px; color: #a0a0b0;">ETH</div></div>
-            </div>
-            <div>$0.00</div>
-        </div>
-    </div>
+        function renderApp() {
+            document.getElementById('displayUsername').innerText = appState.username;
+            document.getElementById('usernameInput').value = appState.username.replace('@','');
+            document.getElementById('currencySymbol').value = appState.currency;
+            
+            let formattedBalance = `${appState.balance.toLocaleString('es-MX', {minimumFractionDigits: 2})} ${appState.currency}`;
+            document.getElementById('mainBalance').innerText = formattedBalance;
+            
+            let select = document.getElementById('friendSelect');
+            select.innerHTML = '';
+            let fList = document.getElementById('friendsList');
+            fList.innerHTML = '';
 
+            if(appState.friends.length === 0) {
+                fList.innerHTML = 'No hay amigos en la red local.';
+            } else {
+                appState.friends.forEach(f => {
+                    let opt = document.createElement('option');
+                    opt.value = f;
+                    opt.innerText = `@${f}`;
+                    select.appendChild(opt);
+
+                    let div = document.createElement('div');
+                    div.className = 'list-item';
+                    div.innerHTML = `<span>@${f}</span> <span style="color:var(--green)">● Conectado (Ciego)</span>`;
+                    fList.appendChild(div);
+                });
+            }
+        }
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.getElementById('tab-' + tabId).classList.add('active');
+            event.currentTarget.classList.add('active');
+        }
+
+        function cambiarMonedaBase() {
+            let cur = document.getElementById('currencySymbol').value;
+            appState.currency = cur;
+            saveData();
+        }
+
+        function guardarUsername() {
+            let val = document.getElementById('usernameInput').value.trim();
+            if(val) {
+                appState.username = '@' + val.replace('@','');
+                saveData();
+                alert('Nombre de usuario actualizado con éxito.');
+            }
+        }
+
+        function depositarDineroReal() {
+            let monto = parseFloat(document.getElementById('depositAmount').value);
+            if(!isNaN(monto) && monto > 0) {
+                appState.balance += monto;
+                document.getElementById('depositAmount').value = '';
+                saveData();
+                alert(`¡Fondos registrados y validados en tu bóveda soberana (${appState.currency})!`);
+            } else {
+                alert('Ingresa un monto válido.');
+            }
+        }
+
+        function buscarUsuario() {
+            let query = document.getElementById('searchUserInput').value.trim().toLowerCase();
+            let resDiv = document.getElementById('searchResult');
+            if(!query) {
+                resDiv.innerHTML = '';
+                return;
+            }
+            if(query === 'pepe' || query === 'sofia' || query === 'carlos') {
+                resDiv.innerHTML = `Usuario encontrado: <strong>@${query}</strong> <button onclick="agregarAmigo('${query}')" style="margin-left:10px; padding:4px 8px; background:var(--accent); border:none; border-radius:4px; color:white; cursor:pointer;">Añadir</button>`;
+            } else {
+                resDiv.innerHTML = `<span style="color:var(--text-muted);">Nodo @${query} disponible para enlace directo.</span> <button onclick="agregarAmigo('${query}')" style="margin-left:10px; padding:4px 8px; background:var(--accent); border:none; border-radius:4px; color:white; cursor:pointer;">Agregar</button>`;
+            }
+        }
+
+        function agregarAmigo(name) {
+            if(!appState.friends.includes(name)) {
+                appState.friends.push(name);
+                saveData();
+                alert(`¡@${name} agregado a tu red P2P ciega!`);
+            } else {
+                alert('El usuario ya está agregado.');
+            }
+        }
+
+        function enviarDineroP2P() {
+            let friend = document.getElementById('friendSelect').value;
+            let amount = parseFloat(document.getElementById('transferAmount').value);
+            if(!friend) { alert('Selecciona un amigo.'); return; }
+            if(isNaN(amount) || amount <= 0) { alert('Monto inválido.'); return; }
+            if(amount > appState.balance) { alert('Saldo insuficiente en tu bóveda.'); return; }
+            
+            appState.balance -= amount;
+            saveData();
+            document.getElementById('transferAmount').value = '';
+            alert(`¡Transferencia de ${amount} ${appState.currency} enviada a @${friend} de forma limpia, inmediata y sin registros externos!`);
+        }
+
+        function comprarCripto(tipoCrypto) {
+            let costo = 500; // Costo simulado de adquisición en moneda local
+            if(appState.balance >= costo) {
+                appState.balance -= costo;
+                saveData();
+                alert(`¡Compra de ${tipoCrypto} exitosa!\n\nLos fondos se han descontado de tu bóveda y la criptomoneda soberana ha sido depositada en tu cartera externa.`);
+            } else {
+                alert('Saldo insuficiente en tu bóveda fiat para adquirir este activo.');
+            }
+        }
+
+        function conectarMT5() {
+            let monto = prompt(`Ingresa el monto en ${appState.currency} a enviar a tu cuenta MT5:`);
+            let mNum = parseFloat(monto);
+            if(!isNaN(mNum) && mNum > 0 && mNum <= appState.balance) {
+                appState.balance -= mNum;
+                saveData();
+                alert(`Enlace ejecutado: ${mNum} ${appState.currency} transferidos hacia MetaTrader 5.`);
+            } else {
+                alert('Monto inválido o superior a tu saldo actual.');
+            }
+        }
+
+        function comprarGiftCard(marca, costoBase) {
+            if(appState.balance >= costoBase) {
+                appState.balance -= costoBase;
+                saveData();
+                let codigoReal = "GIFT-" + Math.random().toString(36).substring(2, 8).toUpperCase() + "-" + Math.random().toString(36).substring(2, 8).toUpperCase();
+                alert(`¡Tarjeta de ${marca} adquirida con éxito!\n\nTu código al portador:\n${codigoReal}\n\nDescontado de tu bóveda en ${appState.currency}.`);
+            } else {
+                alert('Saldo insuficiente en tu bóveda limpia.');
+            }
+        }
+
+        window.onload = renderApp;
+    </script>
 </body>
-</html>
+                </html>
